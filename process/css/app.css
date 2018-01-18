@@ -1,0 +1,202 @@
+@import url('../../node_modules/bootstrap/dist/css/bootstrap.css');
+
+body {
+    background-color: #ED647E;
+}
+
+main {
+    margin: 0;
+    padding: 0;
+}
+
+.inputSection {
+    background-color: #747474;
+    padding: 20px 40px;
+}
+
+.gifPreview {
+    margin: 20px 40px;
+}
+
+.videoInfoGroup {
+    padding-bottom: 5px;
+}
+
+.videoInfoDivider {
+    margin: 10px 15px;
+    color: #3f3f3f;
+}
+
+.logo {
+    margin: 20px 35px;
+}
+
+.logo:hover{
+    cursor: pointer;
+}
+.flex-container {
+    display: flex;
+}
+
+#openDialog {
+    text-decoration: underline;
+}
+
+.uploadInstruction {
+    font-size: x-large;
+    margin-top: 20%;
+}
+
+#dropzone {
+    width: 80%;
+    height: 400px;
+    background-color: #00b3ee;
+    margin: 100px auto;
+    text-align: center;
+    padding: 10px 10px 20px 10px;
+    border-radius: 3px;
+}
+
+#dropzone-border {
+    border: 3px dashed grey;
+    height: 100%;
+    border-radius: 4px;
+}
+
+video {
+    background: pink;
+}
+
+.outputWidth input[type=radio] {
+    display:none;
+    margin:10px;
+}
+
+.outputWidth input[type=radio] + label {
+    display:inline-block;
+    margin:-2px;
+    padding: 8px 12px 10px 12px;
+    background-color: #e7e7e7;
+    border-color: #ddd;
+    height: 35px;
+}
+
+.outputWidth input[type=radio] + label:hover {
+    background-color: #bababa;
+    border-color: #ddd;
+}
+
+.outputWidth input[type=radio]:checked + label {
+    background-image: none;
+    background-color: #959595;
+}
+
+.convertConfig {
+    margin-left: 35px;
+    margin-top: 10px;
+}
+
+.convertConfig input[type=text] {
+    height: 35px;
+    width: 50px;
+    padding: 5px;
+    margin-right: 10px;
+    border: 1px solid #464646;
+    background-color:white;
+}
+
+.convertConfig > div {
+    margin-bottom: 20px;
+}
+
+.convertConfig > div > div{
+    margin-bottom: 6px;
+}
+
+.convertConfig button {
+    height: 35px;
+    border-radius: 5px;
+    padding: 1px 18px;
+    border:1px solid #484848;
+    background-color:white;
+}
+
+.convertConfig button:hover {
+    border:1px solid white;
+    background-color:lightgrey;
+    color: white;
+}
+
+
+button:focus, input:focus {
+    outline:0;
+}
+
+.convertGroup {
+    margin-left: auto;
+    align-self: flex-end;
+    display:flex;
+    flex-direction: column;
+}
+
+.outputButton {
+    margin-left: auto;
+}
+
+.convertGroup button {
+    width: 200px;
+    height: 50px;
+    font-size: large;
+    border-radius: 5px;
+    background-color: #589AF8;
+    color: #ececec;
+    border: 1px solid #589AF8;
+    margin: 5px 40px;
+    display:inline-block;
+}
+
+.convertGroup button:hover {
+    background-color: #6b6b6b;
+    color:  #589AF8;
+    border: 3px solid #589AF8;
+}
+
+.outputLocation {
+    background-color: #66DFA3;
+    background-color: #66DFA3;
+    margin: 30px;
+    padding: 18px 30px;
+    border-radius: 2px;
+}
+
+.changeOutputLocation {
+    text-decoration: underline;
+    margin-top: 6px;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background-color: rgba(0,0,0,0.5); /*dim the background*/
+}
+
+.loader {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.loader-text {
+    color: white;
+    height: 1100px;
+    line-height: 1100px;
+    text-align: center
+}
+
