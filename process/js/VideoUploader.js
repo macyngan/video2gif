@@ -28,11 +28,11 @@ class VideoUploader extends React.Component {
         })
 
         dropzone.addEventListener('dragenter', (e) => {
-            document.getElementById('dropzone-border').style.backgroundColor = 'purple'
+            document.getElementById('dropzone-border').style.backgroundColor = '#98C2F4'
         })
 
         dropzone.addEventListener('dragleave', (e) => {
-            document.getElementById('dropzone-border').style.backgroundColor = '#00b3ee'
+            document.getElementById('dropzone-border').style.backgroundColor = '#589AF8'
         })
 
         let openDialog = document.getElementById('openDialog')

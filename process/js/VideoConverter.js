@@ -105,6 +105,9 @@ class VideoConverter extends React.Component {
             that.setState({
                 isConverting: false
             })
+            new Notification('Done Converting', {
+                body: 'Your Gif is Ready!'
+            })
         })
     }
 

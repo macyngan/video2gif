@@ -47,10 +47,14 @@ main {
     margin-top: 20%;
 }
 
+.uploadInstruction a {
+    color: #595DCE;
+}
+
 #dropzone {
     width: 80%;
     height: 400px;
-    background-color: #00b3ee;
+    background-color: #589AF8;
     margin: 100px auto;
     text-align: center;
     padding: 10px 10px 20px 10px;
