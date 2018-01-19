@@ -23,8 +23,7 @@ class MainInterface extends React.Component {
                 height:"",
                 duration: 0,
                 codecType:""
-            },
-            errMsg:""
+            }
         }
 
         this.uploadedVideo = this.uploadedVideo.bind(this)
@@ -67,7 +66,13 @@ class MainInterface extends React.Component {
     returnToHomePage() {
         this.setState({
             currentState: 'upload',
-            videoInputPath: ""
+            videoInputPath: "",
+            convertOption: {
+                startTime: 0,
+                endTime: 0,
+                widthLimit: "original",
+                videoOutputPath: ""
+            }
         })
     }
 
@@ -91,7 +96,8 @@ class MainInterface extends React.Component {
                     <VideoConverter videoInputPath = {this.state.videoInputPath}
                                     convertOption={this.state.convertOption}
                                     updateConvertOption={this.updateConvertOption}
-                                    videoDetail={this.state.inputVideoDetail}/>
+                                    videoDetail={this.state.inputVideoDetail}
+                                    backToHomePage={this.returnToHomePage}/>
                 }
             </div>
         )

@@ -6,10 +6,13 @@ class VideoUploader extends React.Component {
     constructor(props) {
         super(props)
         this.probeVideoValid = this.probeVideoValid.bind(this)
+
+        this.state = {
+            errMsg: ""
+        }
     }
 
     componentDidMount(){
-        let that = this
         let dropzone = document.getElementById('dropzone-border')
 
         dropzone.addEventListener('drop', (e) => {
@@ -19,7 +22,7 @@ class VideoUploader extends React.Component {
             for (let f of e.dataTransfer.files) {
                 file = f.path
             }
-            that.probeVideoValid(file)
+            this.probeVideoValid(file)
         })
 
         dropzone.addEventListener('dragover', (e) => {
@@ -42,13 +45,11 @@ class VideoUploader extends React.Component {
         })
 
         ipcRenderer.on('selected-directory', (event, path) => {
-            that.probeVideoValid(path[0])
+            self.probeVideoValid(path[0])
         })
     }
 
     probeVideoValid(path) {
-        let that = this
-
         // check file extension
         let pathSegments = path.split(".")
         let format = pathSegments[pathSegments.length-1].toLowerCase()
@@ -57,38 +58,50 @@ class VideoUploader extends React.Component {
         let filenameSegments = path.split("/")
         let filename = filenameSegments[filenameSegments.length-1].toLowerCase()
 
-        if(['mov','mp4','3pg','flv'].indexOf(format) == -1) {
-
+        if(['mov','mp4','3pg'].indexOf(format) == -1) {
+            this.setState({
+                errMsg: "Oops! We only accept MOV, MP4 or 3pg files"
+            })
         }else{
-            let cmd = CONFIG.repositoryRootPath + '/bin/ffmpeg/ffprobe -hide_banner -show_streams '
-                        + path +' -print_format json'
+            let cmd = CONFIG.repositoryRootPath + '/bin/ffmpeg/ffprobe -hide_banner -show_streams "'
+                        + path +'" -print_format json'
 
             exec(cmd, (error, stdout, stderr) => {
                 if (error) {
                     console.error(`exec error: ${error}`)
+                    this.setState({
+                        errMsg: "Oops!" + error
+                    })
                     return
                 }
 
                 let data = JSON.parse(stdout)
 
+                if(data.streams[0].codec_type != 'video') {
+                    this.setState({
+                        errMsg: "Oops! We only accept video file"
+                    })
+                    return
+                }
+
                 let videoDetails = {
                     name: filename,
                     format: format,
-                    width: data.streams[0].width || null,
-                    height: data.streams[0].height || null,
-                    duration: data.streams[0].duration,
+                    width: data.streams[0].width || 0,
+                    height: data.streams[0].height || 0,
+                    duration: data.streams[0].duration || 0,
                     codecType: data.streams[0].codec_type
                 }
 
                 let convertOption = {
-                    startTime: Math.round(data.streams[0].start_time),
-                    endTime: Math.round(data.streams[0].duration),
-                    videoOutputPath: CONFIG.repositoryRootPath + '/output/output.gif'
+                    startTime: Math.trunc(data.streams[0].start_time) || 0,
+                    endTime: Math.trunc(data.streams[0].duration) || 0,
+                    videoOutputPath: `${pathSegments[0]}.gif`
                 }
 
-                that.props.updateVideoDetail(videoDetails)
-                that.props.updateConvertOption(convertOption)
-                that.props.uploadedVideo(path)
+                this.props.updateVideoDetail(videoDetails)
+                this.props.updateConvertOption(convertOption)
+                this.props.uploadedVideo(path)
             })
         }
     }
@@ -96,6 +109,7 @@ class VideoUploader extends React.Component {
     render() {
         return(
             <div>
+                <div className="errMsg">{this.state.errMsg}</div>
                 <div id="dropzone">
                     <div id="dropzone-border">
                         <p className="uploadInstruction">
@@ -103,6 +117,7 @@ class VideoUploader extends React.Component {
                                 <strong>Choose a video</strong>
                             </a> or drag it here
                         </p>
+                        <p>Accepts MP4, MOV, 3pg files, one at a time</p>
                     </div>
                 </div>
             </div>

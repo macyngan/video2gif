@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-let {exec} = eRequire('child_process')
+const path = require('path')
+const {exec} = eRequire('child_process')
 
 class VideoConverter extends React.Component {
     constructor(props) {
@@ -12,7 +13,8 @@ class VideoConverter extends React.Component {
         this.convertVideo = this.convertVideo.bind(this)
 
         this.state = {
-            isConverting: false
+            isConverting: false,
+            errMsg: ""
         }
     }
 
@@ -25,9 +27,13 @@ class VideoConverter extends React.Component {
         let previewVideo = document.getElementById("preview")
         previewVideo.addEventListener('timeupdate', ()=>{
             if(this.props.convertOption.startTime < this.props.convertOption.endTime) {
+                this.setState({
+                    errMsg: ""
+                })
+                document.getElementById("convertBtn").disabled = false
                 let duration = this.props.convertOption.endTime - this.props.convertOption.startTime
                 if(document.getElementById("previewDuration")) {
-                    let durationHTML = "<div>Duration: " + Math.round(duration) +  " sec(s)</div>"
+                    let durationHTML = "<div>Duration: " + Math.trunc(duration) +  " sec(s)</div>"
                     document.getElementById("previewDuration").innerHTML = durationHTML
                 }
 
@@ -37,37 +43,42 @@ class VideoConverter extends React.Component {
                 }
             }else{
                 if(document.getElementById("previewDuration")) {
-                    document.getElementById("previewDuration").innerHTML = ""
+                    document.getElementById("previewDuration").innerHTML = "<div>Invalid Duration</div>"
                 }
+
+                this.setState({
+                    errMsg: "Start Time can only comes before End Time"
+                })
+                document.getElementById("convertBtn").disabled = true
             }
         })
 
-        let that = this
+        let self = this
         ipcRenderer.on('saved-file', (event, path) => {
             if (!path) {
                 path = ""
             } else {
-                that.props.updateConvertOption({videoOutputPath: path})
+                self.props.updateConvertOption({videoOutputPath: path})
             }
         })
     }
 
     updateTimeStamp(event) {
         let vid = document.getElementById("inputVideo")
-        let newTime = Math.round(event.target.value)
+        let newTime = Math.trunc(event.target.value)
 
         switch(event.target.id) {
             case "startTimeInput":
                 this.props.updateConvertOption({startTime: newTime})
                 break
             case "startTimeButton":
-                this.props.updateConvertOption({startTime: Math.round(vid.currentTime)})
+                this.props.updateConvertOption({startTime: Math.trunc(vid.currentTime)})
                 break
             case "endTimeInput":
                 this.props.updateConvertOption({endTime: newTime})
                 break
             case "endTimeButton":
-                this.props.updateConvertOption({endTime: Math.round(vid.currentTime)})
+                this.props.updateConvertOption({endTime: Math.trunc(vid.currentTime)})
                 break
         }
     }
@@ -81,7 +92,6 @@ class VideoConverter extends React.Component {
     }
 
     convertVideo() {
-        let that = this
 
         // no need to scale if using original
         let scale = this.props.convertOption.widthLimit === 'original' ?
@@ -95,19 +105,30 @@ class VideoConverter extends React.Component {
                     + this.props.videoInputPath + ' -r 24 ' + scale + '-y '
                     + this.props.convertOption.videoOutputPath
 
-        that.setState({
+        this.setState({
             isConverting: true
         })
 
         let ls = exec(cmd)
 
         ls.on('close', (code) => {
-            that.setState({
+            this.setState({
                 isConverting: false
             })
-            new Notification('Done Converting', {
-                body: 'Your Gif is Ready!'
-            })
+
+            let imagePath = this.props.convertOption.videoOutputPath
+
+            const notification = {
+                title: 'Your Gif is Ready!',
+                body: `Image saved to ${this.props.convertOption.videoOutputPath}`,
+                icon: `${CONFIG.repositoryRootPath}/app/images/openFileIcon.png`
+            }
+
+            const doneNotification = new window.Notification(notification.title, notification)
+
+            doneNotification.onclick = () => {
+                ipcRenderer.send('open-image', imagePath)
+            }
         })
     }
 
@@ -118,7 +139,7 @@ class VideoConverter extends React.Component {
             loadingOverlay =
                 <div className="overlay">
                     <img className="loader"
-                         src={`${CONFIG.repositoryRootPath}/app/images/Pacman.gif`}
+                         src={CONFIG.repositoryRootPath + "/app/images/Pacman.gif"}
                          alt="Converting..."/>
                     <div className="loader-text">Converting, please be patient ... </div>
                 </div>
@@ -126,6 +147,7 @@ class VideoConverter extends React.Component {
 
         return(
             <div>
+                <div className="errMsg">{this.state.errMsg}</div>
                 <div className="inputSection">
                     <h4>Input Video</h4>
                     <div className="videoInfoGroup">
@@ -196,7 +218,7 @@ class VideoConverter extends React.Component {
                 <div className="flex-container">
                     <div className="gifPreview">
                         <h4>Output Gif Preview</h4>
-                        <video id="preview" width="350" autoPlay loop>
+                        <video id="preview" width="350" autoPlay loop muted>
                             <source src={this.props.videoInputPath} type="video/mp4"/>
                             Your browser does not support HTML5 video.
                         </video>
@@ -211,7 +233,8 @@ class VideoConverter extends React.Component {
                             </div>
                         </div>
                         <div className="outputButton">
-                            <button onClick={this.convertVideo}>Convert</button>
+                            <button onClick={this.props.backToHomePage} className="backHome"><i className="fa fa-arrow-left fa-lg" aria-hidden="true"></i>Back</button>
+                            <button id="convertBtn" onClick={this.convertVideo}><i className="fa fa-refresh fa-lg" aria-hidden="true"></i>Convert</button>
                         </div>
                     </div>
                 </div>

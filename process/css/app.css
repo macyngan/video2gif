@@ -1,4 +1,5 @@
 @import url('../../node_modules/bootstrap/dist/css/bootstrap.css');
+@import url('../../node_modules/font-awesome/css/font-awesome.min.css');
 
 body {
     background-color: #ED647E;
@@ -31,7 +32,7 @@ main {
     margin: 20px 35px;
 }
 
-.logo:hover{
+.logo img:hover{
     cursor: pointer;
 }
 .flex-container {
@@ -138,7 +139,7 @@ button:focus, input:focus {
 
 .convertGroup {
     margin-left: auto;
-    align-self: flex-end;
+    align-self: center;
     display:flex;
     flex-direction: column;
 }
@@ -148,21 +149,44 @@ button:focus, input:focus {
 }
 
 .convertGroup button {
-    width: 200px;
+    width: 150px;
     height: 50px;
     font-size: large;
     border-radius: 5px;
     background-color: #589AF8;
-    color: #ececec;
+    color: white;
     border: 1px solid #589AF8;
-    margin: 5px 40px;
+    margin: 5px 30px 5px 0px;
     display:inline-block;
+}
+
+.convertGroup button.backHome {
+    background-color: #90bdff;
+    color: white;
+    border: 1px solid #90bdff;
 }
 
 .convertGroup button:hover {
     background-color: #6b6b6b;
     color:  #589AF8;
     border: 3px solid #589AF8;
+}
+
+
+#convertBtn[disabled] {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+#convertBtn[disabled]:hover {
+    background-color: #589AF8;
+    color: white;
+    border: 1px solid #589AF8;
+}
+
+.convertGroup button.backHome:hover {
+    background-color: #d8d8d8;
+    color: #90bdff;
 }
 
 .outputLocation {
@@ -203,4 +227,15 @@ button:focus, input:focus {
     line-height: 1100px;
     text-align: center
 }
+
+.outputButton i {
+    margin-right: 15px;
+}
+
+.errMsg {
+    color: white;
+    background-color: #000000;
+    text-align: center;
+}
+
 

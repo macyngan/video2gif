@@ -45,4 +45,8 @@ app.on('ready', () => {
             event.sender.send('saved-file', filename)
         })
     })
+
+    ipcMain.on('open-image', (event, path)=>{
+        appWindow.previewFile(path)
+    })
 })

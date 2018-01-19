@@ -2,10 +2,11 @@
   "name": "video2gif",
   "version": "1.0.0",
   "description": "convert video to gif",
-  "main": "index.js",
+  "main": "app/main",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./node_modules/.bin/gulp"
+    "start": "./node_modules/.bin/gulp",
+    "pack": "./node_modules/.bin/electron-packager . 'Video2Gif' --out ~/Desktop/Video2Gif --icon ./icons/icon --no-asar"
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,8 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "electron-reload": "^1.2.2",
-    "fix-path": "^2.1.0"
+    "fix-path": "^2.1.0",
+    "font-awesome": "^4.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.37",
