@@ -1,0 +1,6 @@
+ffprobe command to get info about video:
+../bin/ffmpeg/ffprobe -hide_banner -show_streams ./sample.mp4 -print_format json
+
+ffmpeg convert command:
+../bin/ffmpeg/ffmpeg -i ./sample.mp4 -r 24 -vf scale=1200:-1 output.gif
+
